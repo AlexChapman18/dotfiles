@@ -1,94 +1,111 @@
-# Hugues’s dotfiles
+# AlexChapman18's dotfiles
 
-![Screenshot of my shell prompt](https://i.imgur.com/EkEtphC.png)
+A small Bash/Git terminal setup focused on the features I actually use:
+
+- Git-aware shell prompt that shows the current branch or short SHA.
+- Prompt and Git output colouring.
+- Case-insensitive shell completion.
+- Bash/Git/SSH command completion.
+- Smarter Up/Down history search based on the text already typed.
+- Bootstrap installer for copying the dotfiles into `$HOME`.
+- Homebrew setup for Bash, Bash completion, wget, tmux, Python, htop, Git, Git LFS, and fzf.
+- Git and terminal aliases imported from `utility-scripts`.
 
 ## Installation
 
-**Warning:** If you want to give these dotfiles a try, you should first fork this repository, review the code, and remove things you don’t want or need. Don’t blindly use my settings unless you know what that entails. Use at your own risk!
-
-### Using Git and the bootstrap script
-
-You can clone the repository wherever you want. (I like to keep it in `~/Projects/dotfiles`, with `~/dotfiles` as a symlink.) The bootstrapper script will pull in the latest version and copy the files to your home folder.
+Review the files before installing. The bootstrap script copies these dotfiles
+into your home directory and may overwrite existing files with the same names.
 
 ```bash
-git clone https://github.com/hugueskamba/dotfiles.git && cd dotfiles && source bootstrap.sh
+git clone https://github.com/AlexChapman18/dotfiles.git && cd dotfiles && source bootstrap.sh
 ```
 
-To update, `cd` into your local `dotfiles` repository and then:
+To update an existing checkout:
 
 ```bash
+cd dotfiles
 source bootstrap.sh
 ```
 
-Alternatively, to update while avoiding the confirmation prompt:
+To skip the confirmation prompt:
 
 ```bash
-set -- -f; source bootstrap.sh
+set -- -f
+source bootstrap.sh
 ```
 
-### Git-free install
+## Homebrew Packages
 
-To install these dotfiles without Git:
+To install Homebrew if needed, update it, and install the package list, run:
 
 ```bash
-cd; curl -#L https://github.com/hugueskamba/dotfiles/tarball/master | tar -xzv --strip-components 1 --exclude={README.md,bootstrap.sh,.osx,LICENSE-MIT.txt}
+./install-brew-and-packages.sh
 ```
 
-To update later on, just run that command again.
+The script updates Homebrew and installs:
 
-### Specify the `$PATH`
+- `bash`
+- `bash-completion`
+- `wget`
+- `tmux`
+- `python`
+- `htop`
+- `git`
+- `git-lfs`
+- `fzf`
 
-If `~/.path` exists, it will be sourced along with the other files, before any feature testing (such as [detecting which version of `ls` is being used](https://github.com/hugueskamba/dotfiles/blob/aff769fd75225d8f2e481185a71d5e05b76002dc/.aliases#L21-26)) takes place.
+## Aliases
 
-Here’s an example `~/.path` file that adds `/usr/local/bin` to the `$PATH`:
+Terminal:
 
-```bash
-export PATH="/usr/local/bin:$PATH"
+- `c` clears the terminal.
+
+Git:
+
+- `g` runs `git`.
+- `gl` shows the latest commit in a coloured one-line format.
+- `gll` shows the Git log in the same coloured one-line format.
+- `gs` runs `git status`.
+- `gcan` amends the latest commit without editing its message.
+- `gcm` commits with a message.
+- `gcrm` commits reusing `ORIG_HEAD`'s message.
+- `gad` stages all changes.
+- `gp` runs `git push`.
+- `gf` uses `fzf` to create a fixup commit.
+- `gsa` uses `fzf` to apply a stash.
+- `gsd` uses `fzf` to drop a stash.
+- `gspm` creates a stash with a message.
+- `gsp` pops the latest stash.
+- `gsl` lists stashes with colour.
+- `gss` shows a stash.
+- `grf` uses `fzf` to remove selected files from the latest commit.
+
+The `fzf`-based aliases fall back to explanatory messages when `fzf` is not
+installed.
+
+## Prompt
+
+The prompt shows:
+
+```text
+user at host in /path/to/worktree on branch
+$
 ```
 
-### Add custom commands without creating a new fork
+When inside a Git repository, the prompt appends status markers:
 
-If `~/.extra` exists, it will be sourced along with the other files. You can use this to add a few custom commands without the need to fork this entire repository, or to add commands you don’t want to commit to a public repository.
+- `+` staged changes.
+- `!` unstaged changes.
+- `$` stashed changes.
 
-My `~/.extra` looks something like this:
+If `HEAD` is detached, the prompt shows the short commit SHA.
 
-```bash
-# Git credentials
-# Not in the repository, to prevent people from accidentally committing under my name
-GIT_AUTHOR_NAME="Mathias Bynens"
-GIT_COMMITTER_NAME="$GIT_AUTHOR_NAME"
-git config --global user.name "$GIT_AUTHOR_NAME"
-GIT_AUTHOR_EMAIL="mathias@mailinator.com"
-GIT_COMMITTER_EMAIL="$GIT_AUTHOR_EMAIL"
-git config --global user.email "$GIT_AUTHOR_EMAIL"
-```
+## Authors
 
-You could also use `~/.extra` to override settings, functions and aliases from my dotfiles repository. It’s probably better to [fork this repository](https://github.com/hugueskamba/dotfiles/fork) instead, though.
+- Alex Chapman / `AlexChapman18`
+- [Hugues Kamba](https://github.com/hugueskamba), whose fork this repository is based on
 
-### Sensible macOS defaults
-
-When setting up a new Mac, you may want to set some sensible macOS defaults:
-
-```bash
-./.macos
-```
-
-### Install Homebrew formulae
-
-When setting up a new Mac, you may want to install some common [Homebrew](https://brew.sh/) formulae (after installing Homebrew, of course):
-
-```bash
-./brew.sh
-```
-
-Some of the functionality of these dotfiles depends on formulae installed by `brew.sh`. If you don’t plan to run `brew.sh`, you should look carefully through the script and manually install any particularly important ones. A good example is Bash/Git completion: the dotfiles use a special version from Homebrew.
-
-## Feedback
-
-Suggestions/improvements
-[welcome](https://github.com/mathiasbynens/dotfiles/issues)!
-
-## Author
+Original upstream author:
 
 | [![twitter/mathias](http://gravatar.com/avatar/24e08a9ea84deb17ae121074d0f17125?s=70)](http://twitter.com/mathias "Follow @mathias on Twitter") |
 |---|
